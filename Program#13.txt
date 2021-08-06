@@ -1,0 +1,279 @@
+% Jayson Albizures Program #13 This program will allow us to start a quest game in prolog.
+% assign the state that will start the program
+start_state(cave_opening).
+% define the edges of the finite state diagram
+
+
+next_state(cave_opening,a,inside).
+next_state(cave_opening,b,inside_darkness).
+next_state(cave_opening,c,climb).
+next_state(cave_opening,d,run_away).
+next_state(cave_opening,e,climb).
+
+next_state(inside,a,cave_opening).
+next_state(inside,b,continue).
+next_state(inside,c,succeed_pit).
+
+next_state(continue,a,fail).
+next_state(continue,b,right_path).
+next_state(conitnue,c,inside).
+
+next_state(right_path,a,end).
+next_state(right_path,b,fail).
+next_state(right_path,c,right_path).
+next_state(right_path,d,continue).
+
+
+next_state(climb,a,fail).
+next_state(climb,b,climb).
+next_state(climb,c,fail).
+next_state(climb,d,cave_opening).
+
+% code to be executed at the beginning...
+
+display_intro :-
+	write('You are on a journey across great lands...'),nl,nl,
+	write('Tranveled many months ...'),nl,
+	write('In order to find the one and only Golden Egg ...'),nl,
+	write('You have reached the destination of where the Golden Egg is hidden... a cave.'),nl,
+	write('There are many traps and enemies inside the cave '),nl,
+	write('So becareful, be ready for a fight, and good luck.' ),nl.
+
+initialize :-
+	asserta(stored_answer(moves,0)),
+	asserta(stored_answer(points,0)).
+
+% code to be executed at the end...
+
+goodbye :-
+	stored_answer(moves,Count),
+	write( 'You made this many moves...' ),
+	write( Count ),nl,
+	stored_answer(points,Amount),
+	write( 'You have this much gold coins...' ),
+	write( Amount ), nl,write( 'Have a nice day'),nl.
+
+
+% code to be executed upon reaching each state
+
+show_state(cave_opening) :-
+	write( 'At the cave opening' ),nl,
+	write( 'Do you want to...'),nl,
+	write( '(a) Go inside with a lantern'),nl,
+	write( '(b) Go inside without a lantern'),nl,
+	write( '(c) Climb above the cave and see what is up top'),nl,
+	write( '(d) Run away from the cave'),nl,
+	write( '(q) Quit the program'),nl.
+
+
+
+show_state(inside) :-
+	write( 'You walk into the cave and you see a pit with spikes'),nl,
+	write( 'You walk around since you have a lantern'),nl,
+	write( 'Do you want to...'), nl,
+	write( '(a) Walk back to the cave opening'),nl,
+	write( '(b) Continue walking further into the cave'),nl,
+	write( '(c) fall down into the pit of spikes'),nl,
+	write( '(q) Quit the program'),nl.
+
+show_state(right_path) :-
+	write( 'You continue to walk the right path...'),nl, 
+	write( 'hoping it leads you closer to the Golden Egg...'),nl,
+	write( 'You come across another two paths with a rock in the middle.'),nl,
+	write( 'Do you want...'),nl,
+	write( '(a) Walk left'),nl,
+	write( '(b) Walk right'),nl,
+	write( '(c) Look under the rock'),nl,
+	write( '(d) Walk back'),nl,
+	write( '(q) Quit the program'),nl.
+	
+
+
+show_state(end) :-
+	write( 'THE GOLDEN EGG!!! You Found it!!! Congraulations!!!'),nl,
+	write( 'You have completed the quest!!!'),nl.
+
+
+show_state(succeed_pit) :-
+	write(' You jump in pit and get injured by the spikes...'),nl,
+	write( '... Then you hear a growl coming from the darkness.' ),nl.
+
+show_state(continue) :-
+	write( 'As you continue to walk further into the cave'),nl,
+	write( 'You come across two paths one to go left and one to go right'),nl,
+	write( 'Do you want to...'),nl,
+	write( '(a) Go left'),nl,
+	write( '(b) Go right'),nl,
+	write( '(c) Go back'),nl,
+	write( '(q) Quit the program'),nl.
+
+
+show_state(inside_darkness) :-
+	write( 'In the cave with no lantern you go into darkness' ), nl,
+	write( 'You walk slowly trying not to go to fast.' ), nl,
+	write( 'Without the lantern you did not see the pit full of spikes' ),nl,
+	write( 'You fall into the pit and get injured' ),nl,
+	write( '...Then you hear a growl coming from the darkness.' ),nl.
+
+
+show_state(fail) :-
+	write( 'You have Failed!'),nl,
+	write( 'The quest will be attempted by someone'),nl,
+	write( 'That person might succeed or have the same fate as you did.'),nl. 
+
+show_state(run_away) :-
+	write( 'to get the Golden Egg. Next time do not accept the quest'),nl,
+	write( 'if you are not ready for the challenges and fears'),nl,
+	write( 'to face upon the journey.'),nl. 
+
+
+show_state(climb) :-
+	write( 'As you climb above the cave opening you get to the top where you see flat land...'),nl,
+	write( 'you see another opeing to the cave... a pit full of darkness' ),nl,
+	write( 'with a rock next to it' ),nl,
+	write( 'Do you want to...'), nl,
+	write( '(a) climb down the opening'),nl,
+	write( '(b) Look under the rock'),nl,
+	write( '(c) whistle into the opening'),nl,
+	write( '(d) Climb back down to the original cave opening'),nl,
+	write( '(q) Quit the program'),nl.
+
+% final states do not display a menu -they automatically quit ('q')
+
+
+
+% code to be executed for each choice of actionfrom each state...
+
+
+
+show_transition(cave_opening,a) :-
+	write( 'You enter the cave...'),nl.
+show_transition(cave_opening,b) :-
+	write( 'You enter the cave... without a lantern...'),nl.
+show_transition(cave_opening,c) :-
+	write( 'You climb up above the cave opening...'),nl.
+show_transition(cave_opening,d) :-
+	write( 'You were to scared to go into the cave'),nl.
+	
+
+show_transition(inside,a) :-
+	write( 'The cave is not as scary as you thought it to believe'),nl.
+show_transition(inside,b) :-
+	write( 'You continue to walk further deeper into the cave...'),nl.
+show_transition(inside,c) :-
+	write('Why did you do this everything was going so well!!'),nl.
+	
+
+show_transition(continue,a) :-
+	write( 'You take the left path hoping it is the right one...'),nl,
+	write( 'Out of nowhere a huge monster comes from the darkness and eats you.'),nl.
+
+ 
+show_transition(continue,b) :-
+	write( 'You take the right path hoping it is the right one...'),nl.
+show_transition(continue,c) :-
+	write(' You made it this far why do you want go back now.'),nl.
+
+show_transition(right_path,a) :-
+	write( 'You walk the left path hoping it is the right one...'),nl,
+	write( 'You notice this path is longer than the others...'),nl,
+	write( 'You see something glowing at the end of the path...'),nl,nl.
+
+show_transition(right_path,b) :-
+	write( 'You take the right path hoping it is the right one...'),nl,
+	write( 'Out of nowhere a huge monster comes from the darkness and eats you.'),nl.
+ 
+show_transition(right_path,c) :-
+	write( 'Hey! you found something under the rock!' ),nl,
+	write( 'Oh.  A gold coin.' ),nl,
+	stored_answer(points,Amount),
+	retract(stored_answer(points,_)),
+	NewAmount is Amount + 1,
+	asserta(stored_answer(points,NewAmount)).
+show_transition(right_path,d) :-
+	write(' You made it this far why do you want go back now.'),nl.
+
+show_transition(climb,a) :-
+	write( 'You climb down the cave ...' ),nl,
+	write( 'As you are climbimg down you hears noises...'),nl,
+	write( 'Out of nowhere a huge monster comes from the darkness and eats you.'),nl.
+
+show_transition(climb,b) :-
+	write( 'Hey! you found something under the rock!' ),nl,
+	write( 'Oh.  A gold coin.' ),nl,
+	stored_answer(points,Amount),
+	retract(stored_answer(points,_)),
+	NewAmount is Amount + 1,
+	asserta(stored_answer(points,NewAmount)).
+show_transition(climb,c) :-
+	write( 'You whistle into the opening ...' ),nl,
+	write( 'Then a giant hand with claws the size of a man grabs you'),nl,
+	write( 'and takes you into the cave and eats you!!'),nl.
+show_transition(climb,d) :-
+	write( 'Atleast we know there is another entrance'),nl,
+	write( 'to the cave to try out.'),nl.
+
+
+
+
+
+get_choice(inside_darkness,q).
+
+
+get_choice(succeed_pit,q).
+
+get_choice(run_away,q).
+
+get_choice(end,q).
+get_choice(fail,q).
+
+
+% basic finite state machine engine
+
+go :-
+	intro,
+	start_state(X),
+	show_state(X),
+	get_choice(X,Y),
+	go_to_next_state(X,Y).
+
+intro :-
+	display_intro,
+	clear_stored_answers,
+	initialize.
+
+go_to_next_state(_,q) :-
+	goodbye,!.
+
+go_to_next_state(S1,Cin) :-
+	next_state(S1,Cin,S2),
+	show_transition(S1,Cin),
+	show_state(S2),
+	stored_answer(moves,K),
+	OneMoreMove is K + 1,
+	retract(stored_answer(moves,_)),
+	asserta(stored_answer(moves,OneMoreMove)),
+	get_choice(S2,Cnew),
+	go_to_next_state(S2,Cnew).
+
+go_to_next_state(S1,Cin) :-
+	\+ next_state(S1,Cin,_),
+	show_transition(S1,fail),
+	get_choice(S1,Cnew),
+	go_to_next_state(S1,Cnew).
+
+get_choice(_,C) :-
+	write('Next entry (letter followed by a period )? '),nl,
+	read(C).
+
+% case knowledge base -user responses
+
+:-dynamic(stored_answer/2).
+
+% procedure to get rid of previous responses
+% without abolishing the dynamic declaration
+
+clear_stored_answers :-retract(stored_answer(_,_)),fail.
+clear_stored_answers.
+
+
